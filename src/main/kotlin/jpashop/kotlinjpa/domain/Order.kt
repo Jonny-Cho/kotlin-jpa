@@ -1,5 +1,6 @@
 package jpashop.kotlinjpa.domain
 
+import jpashop.kotlinjpa.domain.DeliveryStatus.COMP
 import java.time.LocalDateTime
 import javax.persistence.*
 import javax.persistence.EnumType.STRING
@@ -37,18 +38,45 @@ class Order(id: Long = 0L, member: Member, orderItems: MutableList<OrderItem> = 
 	var status = status
 		protected set
 
-	fun addMember(member:Member){
+
+	// 연관관계 메서드
+	fun addMember(member: Member) {
 		member.orders.add(this)
 		this.member = member
 	}
 
-	fun addOrderItem(orderItem:OrderItem){
+	fun addOrderItem(orderItem: OrderItem) {
 		orderItems.add(orderItem)
 		orderItem.addOrder(this)
 	}
 
-	fun addDelivery(delivery:Delivery){
+	fun addDelivery(delivery: Delivery) {
 		this.delivery = delivery
 		delivery.addOrder(this)
+	}
+
+	// 생성 메서드
+//	constructor(member: Member, delivery: Delivery, vararg orderItems: OrderItem) : this(id=0L, member = member, delivery = delivery, orderitems = orderItems.toMutableList(), status = OrderStatus.ORDER, orderDate = LocalDateTime.now())
+
+	fun createOrder(member: Member, delivery: Delivery, vararg orderitems: OrderItem): Order {
+		val orderItemList = orderitems.toList()
+		return Order(member = member, delivery = delivery, orderItems = (orderItems + orderItemList).toMutableList(), status = OrderStatus.ORDER, orderDate = LocalDateTime.now())
+	}
+
+
+	// 비즈니스 로직
+	// 주문 취소
+	fun cancel() {
+		if (delivery.status == COMP) {
+			throw IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.")
+		}
+
+		status = OrderStatus.CANCEL
+		orderItems.map { it.cancel() }
+	}
+
+	// 조회 로직
+	fun getTotalPrice(): Int {
+		return orderItems.fold(0) { total, item -> total + item.orderPrice }
 	}
 }

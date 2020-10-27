@@ -8,4 +8,5 @@ class Book(id: Long = 0L, name: String, price: Int, stockQuantity: Int, author: 
 		protected set
 	var isbn = isbn
 		protected set
+
 }

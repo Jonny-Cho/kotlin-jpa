@@ -49,6 +49,7 @@ internal class MemberServiceTest{
 		//when
 		memberService.join(member1)
 
+		//then
 		//예외발생 해야함
 		assertThatThrownBy{memberService.join(member2)}
 			.isInstanceOf(IllegalArgumentException::class.java)
