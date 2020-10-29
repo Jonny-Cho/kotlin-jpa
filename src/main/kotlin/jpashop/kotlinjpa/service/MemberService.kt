@@ -33,7 +33,7 @@ class MemberService(val memberRepo: MemberRepository) {
 		return memberRepo.findById(memberId).orElse(null)
 	}
 
-	companion object{
+	companion object {
 		const val EXIST_MEMBER = "이미 존재하는 회원입니다."
 	}
 }

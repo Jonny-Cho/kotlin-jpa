@@ -5,7 +5,7 @@ import javax.persistence.FetchType.LAZY
 import javax.persistence.GenerationType.IDENTITY
 
 @Entity
-class Delivery(id: Long = 0L, order: Order, address: Address, status: DeliveryStatus) {
+class Delivery(id: Long = 0L, address: Address, status: DeliveryStatus) {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "delivery_id")
@@ -13,7 +13,7 @@ class Delivery(id: Long = 0L, order: Order, address: Address, status: DeliverySt
 		protected set
 
 	@OneToOne(fetch = LAZY)
-	var order = order
+	lateinit var order: Order
 		protected set
 
 	var address = address

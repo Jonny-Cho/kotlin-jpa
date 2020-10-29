@@ -7,7 +7,9 @@ import javax.persistence.GenerationType.IDENTITY
 
 @Entity
 @Table(name = "order_item")
-class OrderItem(id: Long = 0L, item: Item, order: Order, orderPrice: Int, count: Int) {
+class OrderItem(id: Long = 0L, item: Item, orderPrice: Int, count: Int) {
+	constructor(item: Item, orderPrice: Int, count: Int) : this(0L, item, orderPrice, count)
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "order_item_id")
@@ -21,7 +23,7 @@ class OrderItem(id: Long = 0L, item: Item, order: Order, orderPrice: Int, count:
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "order_id")
-	var order = order
+	lateinit var order: Order
 		protected set
 
 	var orderPrice = orderPrice
@@ -32,5 +34,15 @@ class OrderItem(id: Long = 0L, item: Item, order: Order, orderPrice: Int, count:
 	fun addOrder(order: Order) {
 		this.order = order
 		order.addOrderItem(this)
+	}
+
+	// 비즈니스 로직
+	fun cancel() {
+		item.addStock(count)
+	}
+
+	// 조회 로직
+	fun getTotalPrice(): Int {
+		return orderPrice * count
 	}
 }

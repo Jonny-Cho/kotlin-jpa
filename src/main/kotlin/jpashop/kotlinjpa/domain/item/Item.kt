@@ -8,6 +8,9 @@ import javax.persistence.GenerationType.IDENTITY
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "dtype")
 abstract class Item(id: Long = 0L, name: String, price: Int, stockQuantity: Int) {
+	companion object {
+		const val NOT_ENOUGH_STOCK = "need more stock"
+	}
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "item_id")
@@ -24,14 +27,14 @@ abstract class Item(id: Long = 0L, name: String, price: Int, stockQuantity: Int)
 		protected set
 
 	// 비즈니스 로직
-	fun addStock(quentity: Int){
+	fun addStock(quentity: Int) {
 		this.stockQuantity += quentity
 	}
 
-	fun removeStock(quentity: Int){
+	fun removeStock(quentity: Int) {
 		val restStock = this.stockQuantity - quentity
-		if (restStock < 0){
-			throw NotEnoughStockException("need more stock")
+		if (restStock < 0) {
+			throw NotEnoughStockException(NOT_ENOUGH_STOCK)
 		}
 		this.stockQuantity = restStock
 	}

@@ -1,15 +1,23 @@
 package jpashop.kotlinjpa.domain
 
 import jpashop.kotlinjpa.domain.DeliveryStatus.COMP
+import jpashop.kotlinjpa.domain.OrderStatus.CANCEL
+import jpashop.kotlinjpa.domain.OrderStatus.ORDER
 import java.time.LocalDateTime
 import javax.persistence.*
+import javax.persistence.CascadeType.PERSIST
 import javax.persistence.EnumType.STRING
 import javax.persistence.FetchType.LAZY
 import javax.persistence.GenerationType.IDENTITY
 
 @Entity
 @Table(name = "orders")
-class Order(id: Long = 0L, member: Member, orderItems: MutableList<OrderItem> = mutableListOf(), delivery: Delivery, orderDate: LocalDateTime, status: OrderStatus) {
+class Order(id: Long = 0L, member: Member, delivery: Delivery, orderItems: MutableList<OrderItem> = mutableListOf(), orderDate: LocalDateTime = LocalDateTime.now(), status: OrderStatus = ORDER) {
+
+	constructor(member: Member, delivery: Delivery, vararg orderItems: OrderItem) : this(0L, member, delivery) {
+		this.orderItems = orderItems.toMutableList()
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "order_id")
@@ -22,11 +30,11 @@ class Order(id: Long = 0L, member: Member, orderItems: MutableList<OrderItem> = 
 		// 연관관계 메서드
 		protected set
 
-	@OneToMany(mappedBy = "order")
+	@OneToMany(mappedBy = "order", cascade = [PERSIST])
 	var orderItems = orderItems
 		protected set
 
-	@OneToOne(fetch = LAZY)
+	@OneToOne(fetch = LAZY, cascade = [PERSIST])
 	@JoinColumn(name = "delivery_id")
 	var delivery = delivery
 		protected set
@@ -55,15 +63,6 @@ class Order(id: Long = 0L, member: Member, orderItems: MutableList<OrderItem> = 
 		delivery.addOrder(this)
 	}
 
-	// 생성 메서드
-//	constructor(member: Member, delivery: Delivery, vararg orderItems: OrderItem) : this(id=0L, member = member, delivery = delivery, orderitems = orderItems.toMutableList(), status = OrderStatus.ORDER, orderDate = LocalDateTime.now())
-
-	fun createOrder(member: Member, delivery: Delivery, vararg orderitems: OrderItem): Order {
-		val orderItemList = orderitems.toList()
-		return Order(member = member, delivery = delivery, orderItems = (orderItems + orderItemList).toMutableList(), status = OrderStatus.ORDER, orderDate = LocalDateTime.now())
-	}
-
-
 	// 비즈니스 로직
 	// 주문 취소
 	fun cancel() {
@@ -71,12 +70,12 @@ class Order(id: Long = 0L, member: Member, orderItems: MutableList<OrderItem> = 
 			throw IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.")
 		}
 
-		status = OrderStatus.CANCEL
+		status = CANCEL
 		orderItems.map { it.cancel() }
 	}
 
 	// 조회 로직
 	fun getTotalPrice(): Int {
-		return orderItems.fold(0) { total, item -> total + item.orderPrice }
+		return orderItems.fold(0) { total, item -> total + item.getTotalPrice() }
 	}
 }
