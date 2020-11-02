@@ -22,6 +22,8 @@ class Member(id: Long = 0L, name: String, address: Address, orders: MutableList<
 	var orders = orders
 		protected set
 
+	constructor(name: String, address: Address):this(0L, name, address)
+
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
 		if (javaClass != other?.javaClass) return false
