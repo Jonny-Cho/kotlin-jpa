@@ -11,6 +11,7 @@ abstract class Item(id: Long = 0L, name: String, price: Int, stockQuantity: Int)
 	companion object {
 		const val NOT_ENOUGH_STOCK = "need more stock"
 	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "item_id")
@@ -37,6 +38,12 @@ abstract class Item(id: Long = 0L, name: String, price: Int, stockQuantity: Int)
 			throw NotEnoughStockException(NOT_ENOUGH_STOCK)
 		}
 		this.stockQuantity = restStock
+	}
+
+	fun update(name: String? = null, price: Int? = null, stockQuantity: Int? = null) {
+		name?.also { this.name = it }
+		price?.also { this.price = it }
+		stockQuantity?.also { this.stockQuantity = it }
 	}
 
 	override fun equals(other: Any?): Boolean {

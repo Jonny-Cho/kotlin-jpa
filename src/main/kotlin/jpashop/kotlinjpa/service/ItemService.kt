@@ -18,4 +18,9 @@ class ItemService(val itemRepo: ItemRepository) {
 
 	fun findOne(itemId: Long) = itemRepo.findById(itemId).get()
 
+	fun updateItem(id: Long, name: String, price: Int) {
+		val item = itemRepo.findById(id).get()
+		item.update(name = name, price=price)
+	}
+
 }
