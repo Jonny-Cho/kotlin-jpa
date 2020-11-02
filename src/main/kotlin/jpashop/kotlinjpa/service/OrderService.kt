@@ -21,7 +21,7 @@ class OrderService(val memberRepo: MemberRepository, val orderRepo: OrderReposit
 	@PersistenceContext
 	lateinit var em: EntityManager
 
-	fun findAllBySearch(orderSearch: OrderSearch): MutableList<Order>? {
+	fun findOrders(orderSearch: OrderSearch): List<Order> {
 		//language=JPAQL
 		var jpql = "select o From Order o join o.member m"
 		var isFirstCondition = true
@@ -57,7 +57,7 @@ class OrderService(val memberRepo: MemberRepository, val orderRepo: OrderReposit
 			query = query.setParameter("name", orderSearch.memberName)
 		}
 
-		return query.getResultList()
+		return query.getResultList().toList()
 	}
 
 	fun findById(memberId: Long) = orderRepo.findById(memberId).orElseGet { throw IllegalArgumentException(NOT_EXIST_ORDER) }
@@ -94,4 +94,5 @@ class OrderService(val memberRepo: MemberRepository, val orderRepo: OrderReposit
 		val order = orderRepo.findById(orderId).orElseGet { throw IllegalArgumentException("주문이 존재하지 않습니다. orderId = $orderId") }
 		order.cancel()
 	}
+
 }
