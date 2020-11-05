@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class MemberService(val memberRepo: MemberRepository) {
 
+	companion object {
+		const val EXIST_MEMBER = "이미 존재하는 회원입니다."
+		const val NOT_EXIST_MEMBER = "해당 멤버가 존재하지 않습니다."
+	}
+
 	//회원가입
 	@Transactional // 변경
 	fun join(member: Member): Long {
@@ -29,11 +34,8 @@ class MemberService(val memberRepo: MemberRepository) {
 		return memberRepo.findAll().toList()
 	}
 
-	fun findOne(memberId: Long): Member? {
-		return memberRepo.findById(memberId).orElse(null)
+	fun findById(memberId: Long): Member {
+		return memberRepo.findById(memberId).orElseGet { throw IllegalArgumentException("$NOT_EXIST_MEMBER memberId = $memberId") }
 	}
 
-	companion object {
-		const val EXIST_MEMBER = "이미 존재하는 회원입니다."
-	}
 }

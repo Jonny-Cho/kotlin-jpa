@@ -2,7 +2,6 @@ package jpashop.kotlinjpa.service
 
 import jpashop.kotlinjpa.domain.*
 import jpashop.kotlinjpa.domain.DeliveryStatus.READY
-import jpashop.kotlinjpa.repository.MemberRepository
 import jpashop.kotlinjpa.repository.OrderRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,9 +11,8 @@ import javax.persistence.PersistenceContext
 
 @Service
 @Transactional(readOnly = true)
-class OrderService(val memberRepo: MemberRepository, val orderRepo: OrderRepository, val itemService: ItemService) {
+class OrderService(val memberService: MemberService, val orderRepo: OrderRepository, val itemService: ItemService) {
 	companion object {
-		const val NOT_EXIST_MEMBER = "해당 멤버가 존재하지 않습니다."
 		const val NOT_EXIST_ORDER = "해당 주문이 존재하지 않습니다."
 	}
 
@@ -66,7 +64,7 @@ class OrderService(val memberRepo: MemberRepository, val orderRepo: OrderReposit
 	@Transactional
 	fun order(memberId: Long, itemId: Long, count: Int): Long {
 		// 고객/상품 정보 조회
-		val member = memberRepo.findById(memberId).orElseGet { throw IllegalArgumentException("$NOT_EXIST_MEMBER memberId = $memberId") }
+		val member = memberService.findById(memberId)
 		val item = itemService.findOne(itemId)
 
 		// 배송정보 생성
@@ -80,9 +78,6 @@ class OrderService(val memberRepo: MemberRepository, val orderRepo: OrderReposit
 
 		// 주문 저장
 		orderRepo.save(order)
-
-		// 상품 재고 감소
-		item.removeStock(count)
 
 		return order.id
 	}

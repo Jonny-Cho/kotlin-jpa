@@ -8,7 +8,9 @@ import javax.persistence.GenerationType.IDENTITY
 @Entity
 @Table(name = "order_item")
 class OrderItem(id: Long = 0L, item: Item, orderPrice: Int, count: Int) {
-	constructor(item: Item, orderPrice: Int, count: Int) : this(0L, item, orderPrice, count)
+	constructor(item: Item, orderPrice: Int, count: Int) : this(0L, item, orderPrice, count){
+		item.removeStock(count)
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -33,7 +35,6 @@ class OrderItem(id: Long = 0L, item: Item, orderPrice: Int, count: Int) {
 
 	fun addOrder(order: Order) {
 		this.order = order
-		order.addOrderItem(this)
 	}
 
 	// 비즈니스 로직

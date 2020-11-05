@@ -15,7 +15,9 @@ import javax.persistence.GenerationType.IDENTITY
 class Order(id: Long = 0L, member: Member, delivery: Delivery, orderItems: MutableList<OrderItem> = mutableListOf(), orderDate: LocalDateTime = LocalDateTime.now(), status: OrderStatus = ORDER) {
 
 	constructor(member: Member, delivery: Delivery, vararg orderItems: OrderItem) : this(0L, member, delivery) {
-		this.orderItems = orderItems.toMutableList()
+		orderItems.forEach {
+			addOrderItem(it)
+		}
 	}
 
 	@Id
