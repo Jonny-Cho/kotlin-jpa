@@ -68,7 +68,7 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 		val item = itemService.findOne(itemId)
 
 		// 배송정보 생성
-		val delivery = Delivery(0L, Address("city", "street", "12345"), READY)
+		val delivery = Delivery(Address("city", "street", "12345"))
 
 		// 주문 상품 생성
 		val orderItem = OrderItem(item, item.price, count)

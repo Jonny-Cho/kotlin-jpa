@@ -1,11 +1,15 @@
 package jpashop.kotlinjpa.domain
 
+import jpashop.kotlinjpa.domain.DeliveryStatus.*
 import javax.persistence.*
 import javax.persistence.FetchType.LAZY
 import javax.persistence.GenerationType.IDENTITY
 
 @Entity
-class Delivery(id: Long = 0L, address: Address, status: DeliveryStatus) {
+class Delivery private constructor(id: Long = 0L, address: Address, status: DeliveryStatus) {
+
+	constructor(address: Address): this(0L, address, READY)
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "delivery_id")

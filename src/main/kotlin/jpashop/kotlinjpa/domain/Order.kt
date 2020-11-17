@@ -12,7 +12,7 @@ import javax.persistence.GenerationType.IDENTITY
 
 @Entity
 @Table(name = "orders")
-class Order(id: Long = 0L, member: Member, delivery: Delivery, orderItems: MutableList<OrderItem> = mutableListOf(), orderDate: LocalDateTime = LocalDateTime.now(), status: OrderStatus = ORDER) {
+class Order private constructor(id: Long = 0L, member: Member, delivery: Delivery, orderItems: MutableList<OrderItem> = mutableListOf(), orderDate: LocalDateTime = LocalDateTime.now(), status: OrderStatus = ORDER) {
 
 	constructor(member: Member, delivery: Delivery, vararg orderItems: OrderItem) : this(0L, member, delivery) {
 		orderItems.forEach {
