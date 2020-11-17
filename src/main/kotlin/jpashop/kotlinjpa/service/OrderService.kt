@@ -1,13 +1,11 @@
 package jpashop.kotlinjpa.service
 
 import jpashop.kotlinjpa.domain.*
-import jpashop.kotlinjpa.domain.DeliveryStatus.READY
 import jpashop.kotlinjpa.repository.OrderRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
-
 
 @Service
 @Transactional(readOnly = true)
@@ -80,6 +78,17 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 		orderRepo.save(order)
 
 		return order.id
+	}
+
+	@Transactional
+	fun findAllWithItem(): List<Order> {
+		return em.createQuery(
+			"select distinct o from Order o" +
+				" join fetch o.member m" +
+				" join fetch o.delivery d" +
+				" join fetch o.orderItems oi" +
+				" join fetch oi.item i", Order::class.java
+		).resultList
 	}
 
 	// 주문 취소
