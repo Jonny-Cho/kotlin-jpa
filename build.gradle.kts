@@ -13,9 +13,6 @@ plugins {
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.10"
     id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
 
-    //querydsl
-    id("com.ewerk.gradle.plugins.querydsl") version "1.0.10"
-
     kotlin("jvm") version "1.4.10"
     kotlin("plugin.spring") version "1.4.10"
     kotlin("plugin.jpa") version "1.4.10"
@@ -46,6 +43,12 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    implementation("com.querydsl:querydsl-core") // querydsl
+    implementation("com.querydsl:querydsl-jpa") // querydsl
+
+//    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+//    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 
     kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
     kapt("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
