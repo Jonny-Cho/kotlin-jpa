@@ -3,7 +3,7 @@ package jpashop.kotlinjpa
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jpashop.kotlinjpa.domain.Address
 import jpashop.kotlinjpa.domain.Member
-import jpashop.kotlinjpa.domain.QMember
+import jpashop.kotlinjpa.domain.QMember.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,16 +20,15 @@ class QuerydslApplicationTests {
 
 	@Test
 	fun contextLoads() {
-		val member = Member("member1", Address("city", "street", "12345"))
-		em.persist(member)
+		val newMember = Member("member1", Address("city", "street", "12345"))
+		em.persist(newMember)
 
 		val query = JPAQueryFactory(em)
-		val qMember = QMember("m")
 
-		val result = query.selectFrom(qMember).fetchOne()!!
+		val result = query.selectFrom(member).fetchOne()!!
 
-		assertThat(result).isEqualTo(member)
-		assertThat(result.name).isEqualTo(member.name)
+		assertThat(result).isEqualTo(newMember)
+		assertThat(result.name).isEqualTo(newMember.name)
 	}
 
 }
