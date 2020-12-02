@@ -13,6 +13,6 @@ class QuerydslConfiguration {
 	lateinit var em: EntityManager
 
 	@Bean
-	fun jpaQueryFactory() = JPAQueryFactory(em)
+	fun queryFactory() = JPAQueryFactory(em)
 
 }

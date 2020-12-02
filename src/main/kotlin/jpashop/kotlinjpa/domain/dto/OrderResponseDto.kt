@@ -9,7 +9,7 @@ class OrderResponseDto(order: Order) {
 	val orderDate = order.orderDate.dateFormat()
 	val orderStatus = order.status
 	val address = order.delivery.address
-	val orderItems = order.orderItems.map{ orderItem ->
+	val orderItems = order.orderItems.map { orderItem ->
 		OrderItemDto(orderItem)
 	}
 }

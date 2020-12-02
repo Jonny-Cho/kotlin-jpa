@@ -1,6 +1,6 @@
 package jpashop.kotlinjpa.domain
 
-import jpashop.kotlinjpa.domain.DeliveryStatus.*
+import jpashop.kotlinjpa.domain.DeliveryStatus.READY
 import javax.persistence.*
 import javax.persistence.FetchType.LAZY
 import javax.persistence.GenerationType.IDENTITY
@@ -8,7 +8,7 @@ import javax.persistence.GenerationType.IDENTITY
 @Entity
 class Delivery private constructor(id: Long = 0L, address: Address, status: DeliveryStatus) {
 
-	constructor(address: Address): this(0L, address, READY)
+	constructor(address: Address) : this(0L, address, READY)
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

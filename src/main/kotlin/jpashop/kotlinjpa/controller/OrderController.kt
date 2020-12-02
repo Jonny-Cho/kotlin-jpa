@@ -26,7 +26,7 @@ class OrderController(val orderService: OrderService, val memberService: MemberS
 	fun order(
 		@RequestParam("memberId") memberId: Long,
 		@RequestParam("itemId") itemId: Long,
-		@RequestParam("count") count: Int
+		@RequestParam("count") count: Int,
 	): String {
 		orderService.order(memberId, itemId, count)
 		return "redirect:/orders"

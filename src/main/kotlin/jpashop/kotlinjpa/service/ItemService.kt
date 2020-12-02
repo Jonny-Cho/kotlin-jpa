@@ -14,13 +14,16 @@ class ItemService(val itemRepo: ItemRepository) {
 		itemRepo.save(item)
 	}
 
-	fun findItems() = itemRepo.findAll().toList()
+	fun findItems() = itemRepo.findAll()
+		.toList()
 
-	fun findOne(itemId: Long) = itemRepo.findById(itemId).get()
+	fun findOne(itemId: Long) = itemRepo.findById(itemId)
+		.get()
 
 	fun updateItem(id: Long, name: String, price: Int) {
-		val item = itemRepo.findById(id).get()
-		item.update(name = name, price=price)
+		val item = itemRepo.findById(id)
+			.get()
+		item.update(name = name, price = price)
 	}
 
 }

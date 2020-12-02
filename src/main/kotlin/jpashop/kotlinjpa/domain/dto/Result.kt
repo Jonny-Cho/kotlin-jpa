@@ -1,3 +1,3 @@
 package jpashop.kotlinjpa.domain.dto
 
-class Result(val data:Any)
+class Result(val data: Any)

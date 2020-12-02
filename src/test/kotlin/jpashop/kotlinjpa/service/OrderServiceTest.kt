@@ -43,7 +43,8 @@ internal class OrderServiceTest {
 		val orderId = orderService.order(member.id, book.id, orderCount)
 
 		//then
-		val order = orderRepo.findById(orderId).get()
+		val order = orderRepo.findById(orderId)
+			.get()
 
 		// 주문 상태는 ORDER
 		assertThat(order.status).isEqualTo(OrderStatus.ORDER)
@@ -56,20 +57,19 @@ internal class OrderServiceTest {
 	}
 
 	@Test
-	fun `상품을 주문할 때 재고 수량을 초과하면 안된다`(){
+	fun `상품을 주문할 때 재고 수량을 초과하면 안된다`() {
 		//given
 		val member = createMember()
 		val book = createBook("어린왕자", 10000, 10, "쌩떽쥐베리", "isbn1")
 		val orderCount = 10000
 
 		//then
-		assertThatThrownBy{orderService.order(member.id, book.id, orderCount)}
-			.isInstanceOf(NotEnoughStockException::class.java)
+		assertThatThrownBy { orderService.order(member.id, book.id, orderCount) }.isInstanceOf(NotEnoughStockException::class.java)
 			.hasMessage(NOT_ENOUGH_STOCK)
 	}
 
 	@Test
-	fun `주문 취소가 성공해야 한다`(){
+	fun `주문 취소가 성공해야 한다`() {
 		//given
 		val member = createMember()
 		val book = createBook("어린왕자", 10000, 10, "쌩떽쥐베리", "isbn1")
@@ -92,7 +92,7 @@ internal class OrderServiceTest {
 	}
 
 	@Test
-	fun `재고 수량 초과`(){
+	fun `재고 수량 초과`() {
 		//given
 		val member = createMember()
 		val item = createBook("JPA", 10000, 10, "쌩떽쥐베리", "isbn1")
@@ -100,8 +100,7 @@ internal class OrderServiceTest {
 		val orderCount = 11 // 재고보다 많은 수량 주문
 
 		//then
-		assertThatThrownBy { orderService.order(member.id, item.id, orderCount) }
-			.isInstanceOf(NotEnoughStockException::class.java)
+		assertThatThrownBy { orderService.order(member.id, item.id, orderCount) }.isInstanceOf(NotEnoughStockException::class.java)
 			.hasMessage(NOT_ENOUGH_STOCK)
 	}
 

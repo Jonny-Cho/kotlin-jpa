@@ -31,11 +31,13 @@ class MemberService(val memberRepo: MemberRepository) {
 
 	// 전체 회원 조회
 	fun findMembers(): List<Member> {
-		return memberRepo.findAll().toList()
+		return memberRepo.findAll()
+			.toList()
 	}
 
 	fun findById(memberId: Long): Member {
-		return memberRepo.findById(memberId).orElseGet { throw IllegalArgumentException("$NOT_EXIST_MEMBER memberId = $memberId") }
+		return memberRepo.findById(memberId)
+			.orElseGet { throw IllegalArgumentException("$NOT_EXIST_MEMBER memberId = $memberId") }
 	}
 
 }
