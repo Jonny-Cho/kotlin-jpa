@@ -24,7 +24,7 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 
 		//주문 상태 검색
 		orderSearch.orderStatus?.let {
-			if(isFirstCondition){
+			if (isFirstCondition) {
 				jpql += " where"
 				isFirstCondition = false
 			} else {
@@ -34,8 +34,8 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 		}
 
 		//회원 이름 검색
-		if(orderSearch.memberName.isNotEmpty()) {
-			if(isFirstCondition){
+		if (orderSearch.memberName.isNotEmpty()) {
+			if (isFirstCondition) {
 				jpql += " where"
 				isFirstCondition = false
 			} else {
@@ -83,25 +83,12 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 	// api/v3/orders -> 1:n fetch 조인시 페이징 불가능
 	@Transactional
 	fun findAllWithItem(): List<Order> {
-		return em.createQuery(
-			"select distinct o from Order o" +
-				" join fetch o.member m" +
-				" join fetch o.delivery d" +
-				" join fetch o.orderItems oi" +
-				" join fetch oi.item i", Order::class.java
-		).resultList
+		return em.createQuery("select distinct o from Order o" + " join fetch o.member m" + " join fetch o.delivery d" + " join fetch o.orderItems oi" + " join fetch oi.item i", Order::class.java).resultList
 	}
 
 	@Transactional
-	fun findAllWithMemberDelivery(offset:Int, limit:Int): List<Order> {
-		return em.createQuery(
-			"select distinct o from Order o" +
-				" join fetch o.member m" +
-				" join fetch o.delivery d", Order::class.java
-		)
-			.setFirstResult(offset)
-			.setMaxResults(limit)
-			.resultList
+	fun findAllWithMemberDelivery(offset: Int, limit: Int): List<Order> {
+		return em.createQuery("select distinct o from Order o" + " join fetch o.member m" + " join fetch o.delivery d", Order::class.java).setFirstResult(offset).setMaxResults(limit).resultList
 	}
 
 	// 주문 취소
