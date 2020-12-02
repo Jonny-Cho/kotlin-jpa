@@ -80,6 +80,7 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 		return order.id
 	}
 
+	// api/v3/orders -> 1:n fetch 조인시 페이징 불가능
 	@Transactional
 	fun findAllWithItem(): List<Order> {
 		return em.createQuery(
@@ -89,6 +90,18 @@ class OrderService(val memberService: MemberService, val orderRepo: OrderReposit
 				" join fetch o.orderItems oi" +
 				" join fetch oi.item i", Order::class.java
 		).resultList
+	}
+
+	@Transactional
+	fun findAllWithMemberDelivery(offset:Int, limit:Int): List<Order> {
+		return em.createQuery(
+			"select distinct o from Order o" +
+				" join fetch o.member m" +
+				" join fetch o.delivery d", Order::class.java
+		)
+			.setFirstResult(offset)
+			.setMaxResults(limit)
+			.resultList
 	}
 
 	// 주문 취소

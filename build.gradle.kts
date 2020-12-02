@@ -1,17 +1,34 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-buildscript {
 
+buildscript {
+    repositories {
+        maven("https://plugins.gradle.org/m2/")
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")
+    }
 }
 
 plugins {
     id("org.springframework.boot") version "2.3.4.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.3.61"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.61"
-    kotlin("jvm") version "1.3.72"
-    kotlin("plugin.spring") version "1.3.72"
-    kotlin("plugin.jpa") version "1.3.72"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
+
+    //querydsl
+    id("com.ewerk.gradle.plugins.querydsl") version "1.0.10"
+
+    kotlin("jvm") version "1.4.10"
+    kotlin("plugin.spring") version "1.4.10"
+    kotlin("plugin.jpa") version "1.4.10"
+
+    kotlin("kapt") version "1.4.10" // annotation processing을 위한 kapt
+
+    idea
 }
 
 allOpen {
@@ -35,6 +52,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
+    kapt("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
+
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
@@ -52,3 +73,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+idea {
+    module {
+        val kaptMain = file("build/generated/source/kapt/main")
+        sourceDirs.add(kaptMain)
+        generatedSourceDirs.add(kaptMain)
+    }
+}
