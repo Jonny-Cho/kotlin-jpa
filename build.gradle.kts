@@ -1,15 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-
 buildscript {
     repositories {
         maven("https://plugins.gradle.org/m2/")
         mavenCentral()
-    }
-
-    dependencies {
-        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")
     }
 }
 
